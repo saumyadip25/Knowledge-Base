@@ -5,7 +5,8 @@ It is primarily used to bundle and manage various modules, dependencies, and ass
 Webpack takes a modular approach to application development, allowing developers to break their codebase into smaller, more manageable modules and packages.
 
 In the context of React.js, webpack is often used to bundle JavaScript files, JSX files (which contain React components), 
-CSS stylesheets, images, and other assets required by the application. It helps in optimising the application's performance by reducing the number of HTTP requests made to the server.
+CSS stylesheets, images, and other assets required by the application. It helps in optimising the application's performance 
+by reducing the number of HTTP requests made to the server.
 
 Here are some key features and benefits of using webpack in React.js applications:
 * Module Bundling: Webpack allows you to bundle all your JavaScript modules and their dependencies into a single file (or multiple files) called a bundle. 
