@@ -1,0 +1,28 @@
+Webpack
+
+Webpack is a popular module bundler for JavaScript applications, including React.js applications. 
+It is primarily used to bundle and manage various modules, dependencies, and assets within a web application. 
+Webpack takes a modular approach to application development, allowing developers to break their codebase into smaller, more manageable modules and packages.
+
+In the context of React.js, webpack is often used to bundle JavaScript files, JSX files (which contain React components), 
+CSS stylesheets, images, and other assets required by the application. It helps in optimising the application's performance by reducing the number of HTTP requests made to the server.
+
+Here are some key features and benefits of using webpack in React.js applications:
+* Module Bundling: Webpack allows you to bundle all your JavaScript modules and their dependencies into a single file (or multiple files) called a bundle. 
+  This bundling process reduces the number of requests required to load the application, resulting in faster load times.
+* Code Splitting: With webpack, you can split your code into multiple chunks and load them asynchronously. 
+  This feature is especially useful for large applications, as it allows you to load only the code required for a specific page or feature, improving performance.
+* Loaders: Webpack supports various loaders that enable you to preprocess and transform different types of files. For example, 
+  you can use loaders to transpile JSX code to plain JavaScript using Babel, apply CSS preprocessors like Sass or Less, or optimise and compress images.
+* Development Server: Webpack provides a built-in development server that allows you to run your React.js application locally during development. 
+  It supports hot module replacement, which means that changes made to your code are automatically reflected in the browser without requiring a full page reload.
+* Production Optimisation: Webpack offers several optimisation techniques, such as minification, code splitting, and tree shaking, which help reduce 
+  the size of the bundle and improve the application's performance in production environments.
+
+Overall, webpack is a powerful tool that simplifies the build process and enhances the development experience for React.js applications. 
+It streamlines the management of modules, assets, and dependencies, making it easier to create efficient and scalable web applications.
+
+
+Advantages of bundling into a single file
+
+Allowing the browser to download our entire application once and handle all the other navigations without any additional network calls to our server.
