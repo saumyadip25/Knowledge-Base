@@ -1,0 +1,94 @@
+// Polyfill for call
+
+const data = { name: "Saumyadip" };
+
+function printName() {
+  console.log(`My name is ${this.name}`);
+}
+
+console.log("******** Normal call ********");
+console.log(printName.call(data));
+
+Function.prototype.myCall = function (context, ...args) {
+  if (typeof this !== "function") {
+    throw new Error("This is not valid function");
+  }
+  context.fn = this;
+  context.fn(...args);
+};
+
+console.log("******** Polyfill call ********");
+console.log(printName.myCall(data));
+
+// Polyfill for apply
+
+function printAllDetails(age) {
+  console.log(`My name is ${this.name} and age is ${age}`);
+}
+
+Function.prototype.myApply = function (context, args = []) {
+  if (typeof this !== "function") {
+    throw new Error("This is not valid function");
+  }
+  if (!Array.isArray(args)) {
+    throw new Error("The arguments is not of type array");
+  }
+  context.fn = this;
+  context.fn(...args);
+};
+
+console.log("******** Polyfill apply ********");
+console.log(printAllDetails.myApply(data, [27]));
+
+// Polyfill for bind
+
+Function.prototype.myBind = function (context, ...args) {
+  if (typeof this !== "function") {
+    throw new Error("This is not valid function");
+  }
+  context.fn = this;
+  return function (...newArgs) {
+    return context.fn(...args, ...newArgs);
+  };
+};
+
+console.log("******** Polyfill Bind ********");
+const bindTest = printAllDetails.myBind(data);
+console.log(bindTest(27));
+
+// Polyfill for once
+
+function once(func, context) {
+  let ran;
+  return function () {
+    if (func) {
+      ran = func.apply(context || this, arguments);
+      func = null;
+    }
+
+    return ran;
+  };
+}
+
+const Hello = once(() => {
+  console.log("hello");
+});
+
+Hello();
+Hello();
+Hello();
+
+/*
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+Person.prototype.greet = function() {
+    console.log(`Hello, my name is ${this.name} and I am ${this.age} years old.`);
+};
+
+const alice = new Person('Alice', 30);
+alice.greet(); // Outputs: Hello, my name is Alice and I am 30 years old.
+
+*/
