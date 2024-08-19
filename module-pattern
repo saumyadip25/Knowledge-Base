@@ -1,0 +1,15 @@
+const modulePattern = (function () {
+  function privateMethod() {
+    console.log("Private Method Called!");
+  }
+
+  return {
+    publicMethod: function () {
+      console.log("public method begin");
+      privateMethod();
+      console.log("public method end");
+    },
+  };
+})();
+
+modulePattern.publicMethod();
