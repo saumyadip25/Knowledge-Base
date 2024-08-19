@@ -1,0 +1,32 @@
+const arr = [1, 2, 3, 44, -5, 0];
+
+const maxi = arr.reduce((acc, curr) => {
+  acc = Math.max(acc, curr);
+  return acc;
+}, 0);
+
+console.log(maxi);
+
+Array.prototype.myReduce = function (callbackFn, initialValue) {
+  let accumulator = initialValue;
+  let startIndex = 0;
+
+  // If no initialValue is provided, use the first element as the initial value
+  if (arguments.length < 2) {
+    accumulator = this[0];
+    startIndex = 1;
+  }
+
+  for (let i = startIndex; i < this.length; i++) {
+    accumulator = callbackFn(accumulator, this[i]);
+  }
+
+  return accumulator;
+};
+
+const protoMaxx = arr.myReduce((acc, curr) => {
+  acc = Math.max(acc, curr);
+  return acc;
+}, 0);
+
+console.log("myReduce", protoMaxx);
