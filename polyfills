@@ -92,3 +92,16 @@ const alice = new Person('Alice', 30);
 alice.greet(); // Outputs: Hello, my name is Alice and I am 30 years old.
 
 */
+
+/*debounce polyfills*/
+function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+    }, delay);
+  };
+}
+
