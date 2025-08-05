@@ -94,6 +94,7 @@ alice.greet(); // Outputs: Hello, my name is Alice and I am 30 years old.
 */
 
 /*debounce polyfills*/
+// Executes the function after a delay once no calls have been made for that time.
 function debounce(fn, delay) {
   let timer;
   return function (...args) {
@@ -102,6 +103,25 @@ function debounce(fn, delay) {
     timer = setTimeout(() => {
       fn.apply(context, args);
     }, delay);
+  };
+}
+
+// throtlle 
+// Executes the function at most once every specified interval.
+function throttle(fn, delay) {
+  let isThrottled = false;
+
+  return function (...args) {
+    const context = this;
+
+    if (!isThrottled) {
+      fn.apply(context, args);
+      isThrottled = true;
+
+      setTimeout(() => {
+        isThrottled = false;
+      }, delay);
+    }
   };
 }
 
