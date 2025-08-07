@@ -50,13 +50,22 @@ console.log(printAllDetails.myApply(data, [27]));
 
 // Polyfill for bind
 
-Function.prototype.myBind = function (context, ...args) {
+Function.prototype.myBind = function (context, ...bindArgs) {
   if (typeof this !== "function") {
-    throw new Error("This is not valid function");
+    throw new TypeError("myBind can only be called on functions");
   }
-  context.fn = this;
-  return function (...newArgs) {
-    return context.fn(...args, ...newArgs);
+
+  context = context || globalThis;
+  const fn = this;
+
+  return function (...callArgs) {
+    const fnKey = Symbol(); // avoid name collision
+    context[fnKey] = fn;
+
+    const result = context[fnKey](...bindArgs, ...callArgs);
+
+    delete context[fnKey]; // cleanup
+    return result;
   };
 };
 
