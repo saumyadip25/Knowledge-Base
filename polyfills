@@ -9,12 +9,15 @@ function printName() {
 console.log("******** Normal call ********");
 console.log(printName.call(data));
 
-Function.prototype.myCall = function (context, ...args) {
-  if (typeof this !== "function") {
-    throw new Error("This is not valid function");
-  }
-  context.fn = this;
-  context.fn(...args);
+Function.prototype.myCall = function(context, ...args) {
+  context = context || globalThis;  // default to global object if null/undefined
+  const fnSymbol = Symbol();       // unique property key to avoid collisions
+  context[fnSymbol] = this;        // assign the function to context temporarily
+
+  const result = context[fnSymbol](...args);  // call function with args
+
+  delete context[fnSymbol];        // clean up
+  return result;                   // return function result
 };
 
 console.log("******** Polyfill call ********");
@@ -26,15 +29,20 @@ function printAllDetails(age) {
   console.log(`My name is ${this.name} and age is ${age}`);
 }
 
-Function.prototype.myApply = function (context, args = []) {
-  if (typeof this !== "function") {
-    throw new Error("This is not valid function");
+Function.prototype.myApply = function(context, argsArray) {
+  context = context || globalThis;
+  const fnSymbol = Symbol();
+  context[fnSymbol] = this;
+
+  let result;
+  if (!argsArray) {
+    result = context[fnSymbol]();
+  } else {
+    result = context[fnSymbol](...argsArray);
   }
-  if (!Array.isArray(args)) {
-    throw new Error("The arguments is not of type array");
-  }
-  context.fn = this;
-  context.fn(...args);
+
+  delete context[fnSymbol];
+  return result;
 };
 
 console.log("******** Polyfill apply ********");
