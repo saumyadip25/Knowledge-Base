@@ -1,0 +1,43 @@
+// call
+
+let obj = {
+  name: "Saumyadip",
+  age: 28,
+};
+
+function printDetails(college) {
+  console.log(
+    `My name is ${this.name} and age is ${this.age}. I study at ${college}`
+  );
+}
+
+printDetails.call(obj, "NITK");
+
+Function.prototype.myCall = function (context, ...args) {
+  // 'this' refers to the function on which myCall is invoked
+  if (typeof this !== "function") {
+    // Ensure the caller is actually a function
+    throw new Error("This is not a function.");
+  }
+
+  // If context is null or undefined, default to the global object (window in browsers)
+  context = context || globalThis;
+
+  // Create a unique property key using Symbol to avoid overwriting existing properties
+  const symbol = Symbol();
+
+  // Assign the function (this) as a temporary method on the context object
+  context[symbol] = this;
+
+  // Call the function as a method of the context object, passing the arguments
+  // This sets 'this' inside the function to the context
+  const result = context[symbol](...args);
+
+  // Remove the temporary property to clean up and avoid side effects
+  delete context[symbol];
+
+  // Return the result of the function call
+  return result;
+};
+
+printDetails.myCall(obj, "NITK");
