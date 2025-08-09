@@ -1,0 +1,31 @@
+Function.prototype.myApply = function (context, args) {
+  // 'this' is the function on which myApply is called
+  if (typeof this !== "function") {
+    // Throw error if myApply is not called on a function
+    throw new Error("This is not a function.");
+  }
+
+  // Ensure args is an array; otherwise, throw an error
+  if (!Array.isArray(args)) {
+    throw new Error("Arguments have to be of type array.");
+  }
+
+  // If context is null or undefined, default to the global object (window in browsers)
+  context = context || globalThis;
+
+  // Create a unique symbol property to avoid overwriting existing properties on context
+  const symbol = Symbol();
+
+  // Assign the function (this) as a temporary method on the context object
+  context[symbol] = this;
+
+  // Call the function as a method of the context object, spreading the args array
+  // This ensures the function's 'this' refers to the context
+  const result = context[symbol](...args);
+
+  // Remove the temporary property to clean up and avoid side effects on context
+  delete context[symbol];
+
+  // Return the result of the invoked function
+  return result;
+};
