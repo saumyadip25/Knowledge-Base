@@ -1,0 +1,30 @@
+// Polyfill for map
+const multiplier = {
+  factor: 3,
+  multiplyArray: function (arr) {
+    return arr.map(function (num) {
+      return num * this.factor;
+    }, this);
+  },
+};
+
+console.log(multiplier.multiplyArray([1, 2, 3]));
+
+Array.prototype.myMap = function (callback, context) {
+  let newArray = [];
+  for (let index = 0; index < this.length; index += 1) {
+    newArray[index] = callback.call(context, this[index], index, this);
+  }
+  return newArray;
+};
+
+const multiplier2 = {
+  factor: 3,
+  multiplyArray: function (arr) {
+    return arr.myMap(function (num) {
+      return num * this.factor;
+    }, this);
+  },
+};
+
+console.log(multiplier2.multiplyArray([1, 2, 3]));
