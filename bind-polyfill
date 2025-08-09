@@ -1,0 +1,40 @@
+// bind
+
+let obj = {
+  name: "Saumyadip",
+  age: 28,
+};
+
+function printDetails(college) {
+  console.log(
+    `My name is ${this.name} and age is ${this.age}. I study at ${college}`
+  );
+}
+
+const all = printDetails.bind(obj);
+all("NITK");
+
+Function.prototype.myBind = function (context, ...args) {
+  // 'this' refers to the function on which myBind is invoked
+  if (typeof this !== "function") {
+    // Ensure the caller is actually a function
+    throw new Error("This is not a function.");
+  }
+  const originalFunc = this; // Save original function reference
+  return function (...newArgs) {
+    context = context || globalThis;
+
+    const symbol = Symbol();
+
+    context[symbol] = originalFunc; // Use originalFunc here!
+
+    const result = context[symbol](...args, ...newArgs);
+
+    delete context[symbol];
+
+    return result;
+  };
+};
+
+const ans = printDetails.myBind(obj);
+ans("NITK");
