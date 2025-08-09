@@ -50,3 +50,40 @@ Array.prototype.myFilter = function (callback, context) {
 const newFilterElements = arr.myFilter((val) => val % 2);
 
 console.log(newFilterElements);
+
+// Polyfill for reduce
+const array = [1, 2, 3, 4, 5, 6];
+
+const red = array.reduce((acc, num) => {
+  acc += num;
+  return acc;
+}, 37);
+
+console.log(red);
+
+Array.prototype.myReduce = function (callback, initialValue, context) {
+  let acc;
+  let startIndex = 0;
+
+  if (arguments.length > 1) {
+    // detects if initialValue is provided
+    acc = initialValue;
+  } else {
+    acc = this[0];
+    startIndex = 1;
+  }
+
+  for (let index = startIndex; index < this.length; index++) {
+    acc = callback.call(context, acc, this[index], index, this);
+  }
+
+  return acc;
+};
+
+const newRed = array.myReduce((acc, num) => {
+  acc += num;
+  return acc;
+}, 37);
+
+console.log(newRed);
+
