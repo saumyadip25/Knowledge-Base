@@ -1,0 +1,54 @@
+import { useState } from "react";
+import Parent from "./Parent";
+import withLoading from "./withLoading";
+
+export default function App() {
+  const HOC = withLoading(Parent);
+  return (
+    <div>
+      <HOC />
+    </div>
+  );
+}
+
+**********************************************************************************
+
+import { useState, useEffect } from "react";
+
+const withLoading = (WrappedComponent) => {
+  return (props) => {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+
+      return () => clearTimeout(timer); // cleanup
+    }, []);
+
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+
+    return <WrappedComponent {...props} />;
+  };
+};
+
+export default withLoading;
+
+**********************************************************************************
+
+const Parent = () => {
+  return (
+    <div>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+      corporis obcaecati voluptatibus asperiores vero nihil ipsam rerum, est
+      sapiente quo qui alias repellendus omnis doloremque, iure ducimus ea quod
+      beatae.
+    </div>
+  );
+};
+
+export default Parent;
+
