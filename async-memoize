@@ -1,0 +1,54 @@
+function memoizeAsync(fn) {
+  const cache = new Map();
+  const inProgress = new Map();
+
+  return async function (...args) {
+    const key = JSON.stringify(args);
+
+    // Case 1: If already cached → return cached value immediately
+    if (cache.has(key)) {
+      return Promise.resolve(cache.get(key));
+    }
+
+    // Case 2: If in progress → return the same pending promise
+    if (inProgress.has(key)) {
+      return inProgress.get(key);
+    }
+    console.log("API Call");
+    // Case 3: No cache, no in-progress → call the original async function
+    const promise = fn(...args)
+      .then((result) => {
+        cache.set(key, result); // Save in cache
+        inProgress.delete(key); // Remove from in-progress
+        return result;
+      })
+      .catch((err) => {
+        inProgress.delete(key); // Clean up if error
+        throw err;
+      });
+
+    inProgress.set(key, promise); // Store in-progress promise
+    return promise;
+  };
+}
+
+// Fake API
+async function fetchUser(userId) {
+  // console.log("API call for", userId);
+  return new Promise((resolve) =>
+    setTimeout(() => resolve({ userId, name: "User " + userId }), 500)
+  );
+}
+
+// Memoized version
+const memoizedFetchUser = memoizeAsync(fetchUser);
+
+Promise.all([
+  memoizedFetchUser(1),
+  memoizedFetchUser(2),
+  memoizedFetchUser(1),
+  memoizedFetchUser(2),
+  memoizedFetchUser(2),
+]).then((val) => {
+  console.log(val);
+});
