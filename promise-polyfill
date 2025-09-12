@@ -1,0 +1,75 @@
+// A very simplified implementation of Promise
+function MyPromise(executor) {
+  let onResolve; // callback for resolve
+  let onReject; // callback for reject
+  let isFulfilled = false; // whether the promise has been resolved
+  let isRejected = false; // whether the promise has been rejected
+  let isCalled = false; // to prevent calling handlers multiple times
+  let value; // store resolved value
+  let error; // store rejected error
+
+  // Called when executor calls resolve()
+  function resolve(val) {
+    isFulfilled = true;
+    value = val;
+    // If a .then handler is already attached, call it
+    if (typeof onResolve === "function" && !isCalled) {
+      onResolve(val);
+      isCalled = true;
+    }
+  }
+
+  // Called when executor calls reject()
+  function reject(err) {
+    isRejected = true;
+    error = err;
+    // If a .catch handler is already attached, call it
+    if (typeof onReject === "function" && !isCalled) {
+      onReject(err);
+      isCalled = true;
+    }
+  }
+
+  // Register a handler for success
+  this.then = function (thenHandler) {
+    onResolve = thenHandler;
+    // If already resolved earlier, call handler immediately
+    if (!isCalled && isFulfilled) {
+      onResolve(value);
+      isCalled = true;
+    }
+    return this; // allow chaining
+  };
+
+  // Register a handler for error
+  this.catch = function (catchHandler) {
+    onReject = catchHandler;
+    // If already rejected earlier, call handler immediately
+    if (!isCalled && isRejected) {
+      onReject(error);
+      isCalled = true;
+    }
+    return this; // allow chaining
+  };
+
+  // Immediately execute the executor with resolve and reject
+  executor(resolve, reject);
+}
+
+const newPromise = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("Saumyadip");
+  }, 1000);
+});
+
+const newPromise2 = new MyPromise((resolve, reject) => {
+  resolve("Saumyadip");
+});
+
+newPromise.then((val) => {
+  console.log(val);
+});
+
+newPromise2.then((val) => {
+  console.log(val);
+});
