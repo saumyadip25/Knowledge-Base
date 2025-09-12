@@ -73,3 +73,108 @@ newPromise.then((val) => {
 newPromise2.then((val) => {
   console.log(val);
 });
+
+
+
+*********************************** CLAUDE SUGGESTION ******************************************
+
+function MyPromise(executor) {
+  let state = "pending"; // pending, fulfilled, rejected
+  let value;
+  let onFulfilledCallbacks = [];
+  let onRejectedCallbacks = [];
+
+  this.then = function (onFulfilled, onRejected) {
+    return new MyPromise((resolve, reject) => {
+      function handleFulfilled() {
+        if (typeof onFulfilled === "function") {
+          try {
+            const result = onFulfilled(value);
+            resolve(result);
+          } catch (error) {
+            reject(error);
+          }
+        } else {
+          resolve(value);
+        }
+      }
+
+      function handleRejected() {
+        if (typeof onRejected === "function") {
+          try {
+            const result = onRejected(value);
+            resolve(result);
+          } catch (error) {
+            reject(error);
+          }
+        } else {
+          reject(value);
+        }
+      }
+
+      if (state === "fulfilled") {
+        setTimeout(handleFulfilled, 0); // Async execution
+      } else if (state === "rejected") {
+        setTimeout(handleRejected, 0);
+      } else {
+        onFulfilledCallbacks.push(handleFulfilled);
+        onRejectedCallbacks.push(handleRejected);
+      }
+    });
+  };
+
+  this.catch = function (onRejected) {
+    return this.then(null, onRejected);
+  };
+
+  function resolve(val) {
+    if (state === "pending") {
+      state = "fulfilled";
+      value = val;
+      onFulfilledCallbacks.forEach((callback) => setTimeout(callback, 0));
+    }
+  }
+
+  function reject(reason) {
+    if (state === "pending") {
+      state = "rejected";
+      value = reason;
+      onRejectedCallbacks.forEach((callback) => setTimeout(callback, 0));
+    }
+  }
+
+  try {
+    executor(resolve, reject);
+  } catch (error) {
+    reject(error);
+  }
+}
+
+console.log("=== Testing improved implementation ===");
+
+// Test chaining
+const chainTest = new MyPromise((resolve) => {
+  setTimeout(() => resolve(5), 50);
+});
+
+chainTest
+  .then((val) => {
+    console.log("First:", val);
+    return val * 2;
+  })
+  .then((val) => {
+    console.log("Second:", val);
+    return val + 1;
+  })
+  .then((val) => {
+    console.log("Third:", val);
+  });
+
+// Test multiple listeners
+const multiTest = new MyPromise((resolve) => {
+  setTimeout(() => resolve("shared"), 100);
+});
+
+multiTest.then((val) => console.log("Listener 1:", val));
+multiTest.then((val) => console.log("Listener 2:", val));
+
