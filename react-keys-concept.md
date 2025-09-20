@@ -41,6 +41,15 @@ export default ControlledExample;
 
 ***************************************************************************************************************************************************************
 
+## 🔴 Uncontrolled Component (with `defaultValue`)
+
+- React also **reuses the same DOM node** if the key is the same.
+- But with **`defaultValue`**, React only sets the input’s value **once, when the node mounts**.
+- On subsequent renders, React does **not update the DOM’s value**.
+- **Result:** If React reuses the wrong `<input>` node, whatever was in the DOM (old text, user input, stale value) just stays there.
+- ⚠️ This means inputs can **get out of sync with React state**.
+
+
 import { useState } from "react";
 
 function UncontrolledExample() {
