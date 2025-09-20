@@ -6,3 +6,6 @@ Link - https://www.smashingmagazine.com/2021/06/getting-started-webpack/
 
 Hooks -
 useImperativeHandle - https://medium.com/@nadeem.ahmad.na/understanding-useimperativehandle-a-powerful-hook-for-react-development-46063e44e52a
+
+Reconcialation -
+https://sragu2000.medium.com/understanding-reacts-reconciliation-algorithm-how-it-efficiently-updates-the-dom-7e30bbb57152
